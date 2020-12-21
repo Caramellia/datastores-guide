@@ -1,6 +1,6 @@
 # Data Stores 101
 ## What are Data Stores?
-Data Stores are, unsurprisingly, used to store data. One Data Store can hold data for tens of thousands of different players, and can even be used to store non-player data! Storing data is essential for just about any game, so let's start with storing a single value.
+Data Stores are, unsurprisingly, used to store data. One Data Store can hold data for tens of thousands of different players, and can even be used to store non-player data! Storing data is essential for just about any game, so it's important to learn early on so you don't struggle with adding it when you're deep into a game's development.
 
 For the sake of this tutorial, I've prepared a simple place where there are four things that we should be able to store by the end—two different currencies, a color, and some items that the player can pick up. I won't go into detail on how to make this place, since that's not the focus of the article, but you can download it [here](https://mega.nz/file/lKhSFajA#CdQj8-1WcL0YSN2TpYBKogmuzon-mZCD6XEkbsrUHKI). If you download it, make sure to publish the place to Roblox and enable "Studio Access to API services" in the game settings.
 ## Storing a Single Value
@@ -32,3 +32,13 @@ Players.PlayerAdded:Connect(function(player)
 	
 end)
 ```
+Let's start off by just trying to save and load our Coins value.
+
+First, we need to get the Data Store Service, and then get a Data Store using it.
+```lua
+local Players = game:GetService("Players")
+local DataStoreService = game:GetService("DataStoreService")
+local CoinsDataStore = DataStoreService:GetDataStore("Coins")
+```
+Using GetDataStore gives you the ability to read data from and write data to the Data Store. A game can have any number of Data Stores, but for most practical purposes, you aren't going to need more than one or two.
+
