@@ -34,7 +34,7 @@ end)
 ```
 Let's start off by just trying to save and load our Coins value.
 
-First, we need to get the Data Store Service, and then get a Data Store using it.
+First, we need to get the DataStoreService, and then get a Data Store using it.
 ```lua
 local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
@@ -42,4 +42,10 @@ local CoinsDataStore = DataStoreService:GetDataStore("Coins")
 ```
 Using GetDataStore gives you the ability to read data from and write data to a unique Data Store. A game can have any number of Data Stores, but for most practical purposes, you aren't going to need more than one or two.
 
-Now, we need to make it so that the Coins value saves when the player leaves. Let's add
+Now, we need to make it so that the Coins value saves when the player leaves. Let's add a PlayerRemoving connection, like this:
+```lua
+Players.PlayerRemoving:Connect(function(player)
+
+	
+
+end)
