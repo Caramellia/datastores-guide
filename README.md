@@ -34,19 +34,36 @@ end)
 ```
 Let's start off by just trying to save and load our Coins value.
 
-First, we need to get the DataStoreService, and then get a Data Store using it.
+First, we need to get the DataStoreService, and then get a DataStore using it.
 ```lua
 local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
 local CoinsDataStore = DataStoreService:GetDataStore("Coins")
 ```
-Using GetDataStore gives you the ability to read data from and write data to a unique Data Store. A game can have any number of Data Stores, but for most practical purposes, you aren't going to need more than one or two.
+Using GetDataStore gives you the ability to read data from and write data to a unique DataStore. A game can have any number of DataStores, but for most practical purposes, you aren't going to need more than one or two.
 
 Now, we need to make it so that the Coins value saves when the player leaves. Let's add a PlayerRemoving connection, like this:
 ```lua
 Players.PlayerRemoving:Connect(function(player)
 
-	
-
+end)
+```
+To save a value, you use the SetAsync method of a DataStore, which takes a key and a value. The key is used to retrieve the value with the GetAsync method. When saving player data, you should always use the player's UserId as the key, since if you used the player's name, that player would lose all their data if they changed their username. Some people like to attach a prefix or suffix to the UserId, like "PlayerData_XXXXXXX", but it isn't necessary.
+```lua
+Players.PlayerRemoving:Connect(function(player)
+	CoinsDataStore:SetAsync(player.UserId, player.Stats.Coins.Value)
+end)
+```
+Now, this works, but you should always wrap methods that make web requests in a pcall. These types of methods have a chance to error—not necessarily because the developer wrote code that errors, but because something happened on Roblox's servers. Usually, code that has errored would stop running, but a pcall "catches" errors and allows code that has errored to still continue running. Generally, if the method has a little marking that says `[yields]` next to it on the [API reference](https://developer.roblox.com/en-us/api-reference), then it should be wrapped in a pcall.
+```lua
+Players.PlayerRemoving:Connect(function(player)
+	local success, err = pcall(function()
+		CoinsDataStore:SetAsync(player.UserId, player.Stats.Coins.Value)
+	end)
+	if success then
+		print("Data saved successfully."
+	else
+		warn("Data failed to save. Error:", err)
+	end
 end)
 ```
