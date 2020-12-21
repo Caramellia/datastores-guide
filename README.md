@@ -40,5 +40,6 @@ local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
 local CoinsDataStore = DataStoreService:GetDataStore("Coins")
 ```
-Using GetDataStore gives you the ability to read data from and write data to the Data Store. A game can have any number of Data Stores, but for most practical purposes, you aren't going to need more than one or two.
+Using GetDataStore gives you the ability to read data from and write data to a unique Data Store. A game can have any number of Data Stores, but for most practical purposes, you aren't going to need more than one or two.
 
+Now, we need to make it so that the Coins value saves when the player leaves. Let's add
