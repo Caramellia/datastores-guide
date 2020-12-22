@@ -204,9 +204,65 @@ Instead, we can turn to something that you might have heard of before—a table!
 * Dictionary - A table indexed by anything that isn't an ordered integer.
 * Mixed table - A table which is both indexed by ordered integers AND unordered/non-integers.
 
-So, let's try using a table to store both our Coins value and our Gems value.
+So, let's try using a table to save both our Coins value and our Gems value.
 ```lua
 local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
 local PlayerDataStore = DataStoreService:GetDataStore("PlayerData") --[[We're not just storing Coins anymore,
 	so it's important to have a descriptive name!]]
+	
+Players.PlayerAdded:Connect(function(player)
+	
+	local stats = Instance.new("Folder")
+	stats.Name = "Stats"
+	
+	local storedData = {}
+	--[[If the player has data, this table will be overwritten, but if the player doesn't,
+		it won't, making it act as the "default" data.]]
+	storedData.Coins = 100
+	storedData.Gems = 20
+	
+	local success, err = pcall(function()
+		local data = PlayerDataStore:GetAsync(player.UserId)
+		if data ~= nil then
+			storedData = data
+		end
+	end)
+	if success then
+		print("Data loaded successfully.")
+	else
+		warn("Data failed to load. Error:", err)
+	end
+	local coins = Instance.new("IntValue")
+	coins.Name = "Coins"
+	coins.Value = storedData.Coins
+	coins.Parent = stats
+	
+	local gems = Instance.new("IntValue")
+	gems.Name = "Gems"
+	gems.Value = storedData.Gems
+	gems.Parent = stats
+	
+	local color = Instance.new("Color3Value")
+	color.Name = "Color"
+	color.Value = Color3.fromRGB(255, 0, 0)
+	color.Parent = stats
+	
+	stats.Parent = player
+	
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+	local data = {}
+	data.Coins = player.Stats.Coins.Value
+	data.Gems = player.Stats.Gems.Value
+	local success, err = pcall(function()
+		PlayerDataStore:SetAsync(player.UserId, data)
+	end)
+	if success then
+		print("Data saved successfully.")
+	else
+		warn("Data failed to save. Error:", err)
+	end
+end)
+```
