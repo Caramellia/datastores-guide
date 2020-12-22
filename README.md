@@ -219,6 +219,9 @@ Players.PlayerAdded:Connect(function(player)
 	local storedData = {}
 	--[[If the player has data, this table will be overwritten, but if the player doesn't,
 		it won't, making it act as the "default" data.]]
+	--[[Also, sometimes, you might see people defining tables with the indices inline or tbl[index].
+		Those two also work—it's a just matter of personal preference!
+		That being said, if you use tbl[index] when index is a string, you've instantly lost all of my respect.]]
 	storedData.Coins = 100
 	storedData.Gems = 20
 	
@@ -266,3 +269,4 @@ Players.PlayerRemoving:Connect(function(player)
 	end
 end)
 ```
+Sure enough, both the Coins and Gems values save, and we didn't need to nastily make several DataStore calls. Perfect!
