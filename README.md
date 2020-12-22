@@ -198,8 +198,15 @@ end)
 However, not only is an approach like this unwieldy and hard to maintain, it's also impossible to use when you're storing lots of data! DataStores are rate limited, meaning that they can only handle a certain number of requests before they start to slow down or stop working entirely, and those rate limits are harsh. Consecutive DataStore requests like this cause saving to take ages and will destroy your rate limits.
 
 Instead, we can turn to something that you might have heard of before—a table! Tables, in short, allow you to store many values in one container. If a single variable is like a box that can store one thing, then think of a table like a moving truck, which can store many boxes. Here's a bit of table terminology that might be useful:
-* Index/Key - The value used to "access" another value in the table, e.g. `table[index]` or `table.index`. An index can be of any type, including numbers, strings, Instances, and even functions or other tables!
-* 'Indexed by' - Used to say that a table's indices follow a certain pattern. e.g., a list of parts might be indexed by number, and a table that stores people's heights might be indexed by the person's name.
+* Index/Key - The value used to "access" another value in the table, i.e. `table[index]` or `table.index`. An index can be of any type, including numbers, strings, Instances, and even functions or other tables!
+* 'Indexed by' - Used to say that a table's indices follow a certain pattern. For example, a list of parts might be indexed by number, and a table that stores people's heights might be indexed by the person's name.
 * Array - A table indexed by ordered integers, starting at 1. 
-* Dictionary - A table indexed by anything that isn't an integer or unsorted integers.
+* Dictionary - A table indexed by anything that isn't an ordered integer.
 * Mixed table - A table which is both indexed by ordered integers AND unordered/non-integers.
+
+So, let's try using a table to store both our Coins value and our Gems value.
+```lua
+local Players = game:GetService("Players")
+local DataStoreService = game:GetService("DataStoreService")
+local PlayerDataStore = DataStoreService:GetDataStore("PlayerData") --[[We're not just storing Coins anymore,
+	so it's important to have a descriptive name!]]
