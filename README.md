@@ -1,6 +1,6 @@
 # Data Stores 101
-## What are Data Stores?
-Data Stores are, unsurprisingly, used to store data. One Data Store can hold data for tens of thousands of different players, and can even be used to store non-player data! Storing data is essential for just about any game, so it's important to learn early on so you don't struggle with adding it when you're deep into a game's development.
+## What are DataStores?
+DataStores are, unsurprisingly, used to store data. One DataStore can hold data for tens of thousands of different players, and can even be used to store non-player data! Storing data is essential for just about any game, so it's important to learn early on so you don't struggle with adding it when you're deep into a game's development.
 
 For the sake of this tutorial, I've prepared a simple place where there are four things that we should be able to store by the end—two different currencies, a color, and some items that the player can pick up. I won't go into detail on how to make this place, since that's not the focus of the article, but you can download it [here](https://mega.nz/file/lKhSFajA#CdQj8-1WcL0YSN2TpYBKogmuzon-mZCD6XEkbsrUHKI). If you download it, make sure to publish the place to Roblox and enable "Studio Access to API services" in the game settings.
 ## Section 1: Storing a Single Value
@@ -164,3 +164,35 @@ Players.PlayerRemoving:Connect(function(player)
 	end
 end)
 ```
+## Section 2: Storing Multiple Values
+Okay, so storing our Coins value works all fine and dandy. But what if we want to store both our Coins value and our Gems value? Well, you might be tempted to just create another DataStore and use several SetAsync/GetAsync calls, like this:
+```lua
+local Players = game:GetService("Players")
+local DataStoreService = game:GetService("DataStoreService")
+local CoinsDataStore = DataStoreService:GetDataStore("Coins")
+local GemsDataStore = DataStoreService:GetDataStore("Gems")
+
+Players.PlayerAdded:Connect(function(player)
+	-- ...
+	local storedCoinAmnt = 100
+	local storedGemsAmnt = 20
+	local success, err = pcall(function()
+		local dataCoins = CoinsDataStore:GetAsync(player.UserId)
+		local dataGems = GemsDataStore:GetAsync(player.UserId)
+		if dataCoins ~= nil then
+			storedCoinAmnt = dataCoins
+			storedGemsAmnt = dataGems
+		end
+	end)
+	-- ...
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+	local success, err = pcall(function()
+		CoinsDataStore:SetAsync(player.UserId, player.Stats.Coins.Value)
+		GemsDataStore:SetAsync(player.UserId, player.Stats.Gems.Value)
+	end)
+	-- ...
+end)
+```
+However, not only is an approach like this unwieldy and hard to maintain, it's also impossible to use when you're storing lots of data! DataStores are rate limited, meaning that they can only handle a certain number of requests before they start to slow down or stop working entirely, and those rate limits are harsh. Consecutive DataStore requests like this cause saving to take ages and will destroy your rate limits.
